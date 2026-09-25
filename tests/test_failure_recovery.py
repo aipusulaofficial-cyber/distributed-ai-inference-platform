@@ -14,5 +14,5 @@ class SlowBackend:
 @pytest.mark.asyncio
 async def test_backend_timeout_marks_dependency_failure():
     r = InferenceRouter([SlowBackend()], max_concurrency=1)
-    with pytest.raises(Exception):
+    with pytest.raises(TimeoutError):
         await r.infer("x", 1)
