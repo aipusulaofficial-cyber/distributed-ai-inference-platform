@@ -1,0 +1,4 @@
+apiVersion: v2
+name: distributed-ai-inference-platform
+version: 0.1.0
+type: application
