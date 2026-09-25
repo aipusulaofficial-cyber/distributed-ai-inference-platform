@@ -21,7 +21,7 @@ async def live() -> dict[str, str]:
 @app.get("/health/ready")
 async def ready() -> dict[str, str]:
     try:
-        if not any(b.healthy for b in router.backends):
+        if not any(state.healthy for state in router._states):
             raise NoHealthyBackend("no healthy backend")
     except NoHealthyBackend as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc
