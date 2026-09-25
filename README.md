@@ -1,35 +1,26 @@
 # Distributed AI Inference Platform
 
-Production-oriented reference architecture for reliable, observable, horizontally scalable model serving.
+**Principal-level reference implementation** focused on reliable model serving with routing, bounded concurrency, health-aware backends, and observable inference contracts.
 
-## Engineering goals
+## Engineering intent
+- Clear domain boundaries and replaceable infrastructure adapters
+- Explicit contracts, validation, and failure semantics
+- Deterministic tests with external dependencies isolated
+- Operational readiness through health checks, CI, and security validation
+- Architecture decisions documented so trade-offs are reviewable
 
-- Replaceable model-runtime adapters behind a stable interface
-- Health-aware backend routing and bounded concurrency
-- Contract-first HTTP API with correlation IDs
-- Deterministic tests without external model services
-- CI, containerization, architecture documentation, and ADRs
+## System design
+The repository is structured around a small set of explicit responsibilities rather than framework-driven coupling. Request/event handling, domain policy, infrastructure adapters, and operational concerns are kept separable so individual components can evolve without forcing a system-wide rewrite.
 
-## Architecture
+## Quality bar
+- **Correctness:** contract and edge-case tests cover expected and failure paths
+- **Reliability:** bounded work, explicit timeouts/failures, and health signals where applicable
+- **Security:** least-privilege boundaries, input validation, and safe defaults
+- **Observability:** correlation/context propagation and actionable operational signals
+- **Delivery:** reproducible CI validation before changes are considered complete
 
-```text
-Client -> FastAPI API -> Inference Router -> Backend Registry -> Model Runtime
-                         |                     |
-                         +-> admission         +-> health state
-                         +-> observability
-```
+## Architecture & decisions
+See [ARCHITECTURE.md](ARCHITECTURE.md) and the ADRs directory for system boundaries, key trade-offs, and extension points.
 
-## Quickstart
-
-Requires Python 3.12+.
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
-uvicorn inference_platform.api:app --reload
-```
-
-Then call `GET /health/live`, `GET /health/ready`, or `POST /v1/inference`.
-
-See [ARCHITECTURE.md](ARCHITECTURE.md) and [ADRs/0001-serving-boundaries.md](ADRs/0001-serving-boundaries.md).
+## Engineering principle
+The goal is not to maximize framework complexity; it is to make important behavior **explicit, testable, observable, and replaceable**.
