@@ -3,13 +3,16 @@ from dataclasses import dataclass
 
 from .backends import BackendError, InferenceBackend
 
+
 @dataclass
 class BackendState:
     backend: InferenceBackend
     healthy: bool = True
 
+
 class NoHealthyBackend(BackendError):
     pass
+
 
 class InferenceRouter:
     def __init__(self, backends: list[InferenceBackend], max_concurrency: int = 32) -> None:
@@ -35,7 +38,9 @@ class InferenceRouter:
         state = await self._next_healthy()
         async with self._semaphore:
             try:
-                return await asyncio.wait_for(state.backend.infer(prompt, max_tokens), timeout=2.0), state.backend.name
+                return await asyncio.wait_for(
+                    state.backend.infer(prompt, max_tokens), timeout=2.0
+                ), state.backend.name
             except Exception as exc:
                 state.healthy = False
                 raise BackendError(f"backend {state.backend.name!r} failed") from exc
