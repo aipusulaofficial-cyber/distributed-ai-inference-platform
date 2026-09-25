@@ -3,7 +3,7 @@
 from typing import Any
 
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from observability import PrincipalObservabilityMiddleware
 from otel_setup import tracer
@@ -13,8 +13,8 @@ app.add_middleware(PrincipalObservabilityMiddleware)
 
 
 class InferenceRequest(BaseModel):
-    request_id: str
-    payload: dict[str, Any] = {}
+    request_id: str = Field(min_length=1, max_length=128)
+    payload: dict[str, Any] = Field(default_factory=dict, max_length=32)
 
 
 @app.get("/health/live")
