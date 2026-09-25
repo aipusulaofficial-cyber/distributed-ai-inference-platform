@@ -35,7 +35,7 @@ class InferenceRouter:
         state = await self._next_healthy()
         async with self._semaphore:
             try:
-                return await state.backend.infer(prompt, max_tokens), state.backend.name
+                return await asyncio.wait_for(state.backend.infer(prompt, max_tokens), timeout=2.0), state.backend.name
             except Exception as exc:
                 state.healthy = False
                 raise BackendError(f"backend {state.backend.name!r} failed") from exc
