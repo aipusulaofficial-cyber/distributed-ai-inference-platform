@@ -1,5 +1,7 @@
-from hypothesis import given, strategies as st
 from fastapi.testclient import TestClient
+from hypothesis import given
+from hypothesis import strategies as st
+
 from inference_platform.api import app
 
 c = TestClient(app)

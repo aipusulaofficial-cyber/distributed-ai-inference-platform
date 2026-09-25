@@ -1,9 +1,12 @@
 from uuid import uuid4
+
 from fastapi import FastAPI, HTTPException, Request
+
+from observability import configure_observability, get_logger
+
 from .backends import BackendError, EchoBackend
 from .models import InferenceRequest, InferenceResponse
 from .router import InferenceRouter, NoHealthyBackend
-from observability import configure_observability, get_logger
 
 configure_observability()
 logger = get_logger(__name__)

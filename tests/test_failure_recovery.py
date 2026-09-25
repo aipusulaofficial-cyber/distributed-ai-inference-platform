@@ -1,5 +1,7 @@
 import asyncio
+
 import pytest
+
 from inference_platform.router import InferenceRouter
 
 

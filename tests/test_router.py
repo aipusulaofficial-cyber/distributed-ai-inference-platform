@@ -1,4 +1,5 @@
 import pytest
+
 from inference_platform.backends import EchoBackend
 from inference_platform.router import InferenceRouter, NoHealthyBackend
 
