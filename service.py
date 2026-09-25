@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from otel_setup import tracer
 
 app = FastAPI(title="distributed-ai-inference-platform", version="1.0.0")
+app.add_middleware(PrincipalObservabilityMiddleware)
 
 
 class InferenceRequest(BaseModel):
