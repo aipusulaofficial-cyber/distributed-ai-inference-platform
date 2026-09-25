@@ -104,7 +104,7 @@ class TokenBucket:
             return True
 
 
-class IdempotencyKeyStore(Generic[T]):
+class IdempotencyKeyStore[T]:
     def __init__(self):
         self._results = {}
         self._locks = {}
@@ -123,7 +123,7 @@ class IdempotencyKeyStore(Generic[T]):
             return result
 
 
-def call_with_timeout(fn: Callable[[], T], timeout_seconds: float) -> T:
+def call_with_timeout[T](fn: Callable[[], T], timeout_seconds: float) -> T:
     if timeout_seconds <= 0:
         raise ValueError("timeout must be positive")
     executor = ThreadPoolExecutor(max_workers=1)
@@ -137,7 +137,7 @@ def call_with_timeout(fn: Callable[[], T], timeout_seconds: float) -> T:
         executor.shutdown(wait=False, cancel_futures=True)
 
 
-def with_fallback(
+def with_fallback[T](
     primary: Callable[[], T],
     fallback: Callable[[], T],
     recoverable: Callable[[Exception], bool] = lambda e: True,
@@ -150,7 +150,7 @@ def with_fallback(
         return fallback()
 
 
-def call_with_retry(
+def call_with_retry[T](
     fn: Callable[[], T],
     *,
     policy: RetryPolicy,
