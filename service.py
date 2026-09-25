@@ -1,11 +1,11 @@
-from observability import PrincipalObservabilityMiddleware
-
 """Production HTTP surface for distributed-ai-inference-platform."""
+
 from typing import Any
 
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+from observability import PrincipalObservabilityMiddleware
 from otel_setup import tracer
 
 app = FastAPI(title="distributed-ai-inference-platform", version="1.0.0")
