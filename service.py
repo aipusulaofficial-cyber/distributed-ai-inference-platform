@@ -1,34 +1,10 @@
-"""Production HTTP surface for distributed-ai-inference-platform."""
+"""Compatibility entrypoint for the real inference service.
 
-from typing import Any
+The canonical FastAPI application lives in inference_platform.api.
+This module re-exports it so `uvicorn service:app` executes the same
+router/backend path used by the package API and tests.
+"""
 
-from fastapi import FastAPI
-from pydantic import BaseModel, Field
+from inference_platform.api import app
 
-from observability import PrincipalObservabilityMiddleware
-from otel_setup import tracer
-
-app = FastAPI(title="distributed-ai-inference-platform", version="1.0.0")
-app.add_middleware(PrincipalObservabilityMiddleware)
-
-
-class InferenceRequest(BaseModel):
-    request_id: str = Field(min_length=1, max_length=128)
-    payload: dict[str, Any] = Field(default_factory=dict, max_length=32)
-
-
-@app.get("/health/live")
-def live():
-    return {"status": "ok"}
-
-
-@app.get("/health/ready")
-def ready():
-    return {"status": "ready"}
-
-
-@app.post("/v1/inference")
-def handle(req: InferenceRequest):
-    with tracer.start_as_current_span("inference") as span:
-        span.set_attribute("request.key", req.request_id)
-        return {"status": "accepted", "request_id": req.request_id}
+__all__ = ["app"]
