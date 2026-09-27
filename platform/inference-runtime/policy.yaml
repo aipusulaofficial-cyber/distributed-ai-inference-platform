@@ -1,0 +1,11 @@
+version: "1"
+timeouts:
+  request_seconds: 30
+  backend_seconds: 20
+retries:
+  max_attempts: 2
+health:
+  required_for_routing: true
+observability:
+  trace_required: true
+on_timeout: FAIL
