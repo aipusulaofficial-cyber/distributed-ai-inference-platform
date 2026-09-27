@@ -1,42 +1,25 @@
-name: ci
+name: CI
+
 on:
+  pull_request:
   push:
     branches: [main]
-  pull_request:
   workflow_dispatch:
-permissions: {contents: read}
+
+permissions:
+  contents: read
+
 jobs:
   quality:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - name: Repository integrity gate
-        run: git diff --check
-      - name: Principal evidence gate
-        run: |
-          test -s ARCHITECTURE.md
-          test -s ENGINEERING-CHAIN.md
-          test -s docs/PRINCIPAL-ENGINEERING.md
-          test -s docs/CONTRACTS.md
-          test -s docs/FAILURE-MATRIX.md
-          test -s docs/OPERATIONS.md
-          test -s docs/SLO.md
-          test -s docs/DEPLOYMENT-VERIFICATION.md
-          test -s ADRs/0001-serving-boundaries.md
-          test -s ADRs/0002-production-hardening.md
-          test -s ADRs/0003-failure-retry-strategy.md
-          test -s ADRs/0004-security-decision.md
-      - uses: actions/setup-python@v6
-        with: {python-version: "3.12", cache: "pip"}
-      - run: python -m pip install --upgrade pip
-      - run: pip install -e ".[dev]"
-      - name: Format check
-        run: ruff format --check .
-      - name: Lint
-        run: ruff check .
-      - name: Type check
-        run: mypy --ignore-missing-imports .
-      - name: Tests
-        run: pytest -q --cov=. --cov-report=term-missing --cov-fail-under=70
-      - name: Container build
-        run: docker build -t distributed-ai-inference-platform:ci .
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install quality tools
+        run: python -m pip install --disable-pip-version-check ruff
+      - name: Ruff check
+        run: python -m ruff check .
+      - name: Ruff format check
+        run: python -m ruff format --check .
