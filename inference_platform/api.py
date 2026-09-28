@@ -10,7 +10,7 @@ configure_observability(); logger=get_logger(__name__)
 app=FastAPI(title="Distributed AI Inference Platform",version="0.1.0"); router=InferenceRouter([EchoBackend()])
 @app.middleware("http")
 async def correlation_id(request:Request,call_next):
-    request_id=request_id_from_headers(request.headers); response=await call_next(request); response.headers["x-request-id"]=request_id; return response
+    request_id=request_id_from_headers(request.headers); response=await call_next(request); response.headers["x-request-id"]=request_id; response.headers["x-correlation-id"]=request.headers.get("x-correlation-id",request_id); return response
 @app.get("/health/live")
 async def live()->dict[str,str]: return {"status":"ok"}
 @app.get("/health/ready")
