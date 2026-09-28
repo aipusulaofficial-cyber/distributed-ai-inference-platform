@@ -3,8 +3,12 @@
 This intentionally measures the repository's available workload without inventing
 production numbers. Replace the workload adapter with the real service benchmark.
 """
+
 from __future__ import annotations
-import argparse, json, statistics, time
+
+import argparse
+import json
+import time
 
 
 def run(iterations: int) -> dict:
@@ -18,7 +22,10 @@ def run(iterations: int) -> dict:
             errors += 1
         samples.append((time.perf_counter() - started) * 1000)
     ordered = sorted(samples)
-    pct = lambda q: ordered[min(len(ordered) - 1, int(len(ordered) * q))]
+
+    def pct(q: float) -> float:
+        return ordered[min(len(ordered) - 1, int(len(ordered) * q))]
+
     return {
         "iterations": iterations,
         "throughput_ops_per_sec": iterations / (sum(samples) / 1000) if samples else 0,
