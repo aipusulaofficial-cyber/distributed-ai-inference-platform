@@ -6,3 +6,4 @@ from service import app
 def test_request_key_never_crashes(value):
     r=TestClient(app).post("/v1/inference",json={"prompt":value})
     assert r.status_code == 200
+
