@@ -48,9 +48,39 @@ async def inference(payload: InferenceRequest, request: Request) -> InferenceRes
     try:
         output, backend = await router.infer(payload.prompt, payload.max_tokens)
     except NoHealthyBackend as exc:
-        evidence = runtime_evidence(request_id=request_id, stage="inference.route", decision="FAIL", started=started, error=str(exc), circuit_state="OPEN")
-        raise HTTPException(status_code=503, detail={"error": str(exc), "evidence": evidence}) from exc
+        evidence = runtime_evidence(
+            request_id=request_id,
+            stage="inference.route",
+            decision="FAIL",
+            started=started,
+            error=str(exc),
+            circuit_state="OPEN",
+        )
+        raise HTTPException(
+            status_code=503,
+            detail={"error": str(exc), "evidence": evidence},
+        ) from exc
     except BackendError as exc:
-        evidence = runtime_evidence(request_id=request_id, stage="inference.backend", decision="FAIL", started=started, error=str(exc))
-        raise HTTPException(status_code=502, detail={"error": str(exc), "evidence": evidence}) from exc
-    return InferenceResponse(request_id=request_id, model=payload.model, output=output, backend=backend, evidence=runtime_evidence(request_id=request_id, stage="inference.backend", decision="ALLOW", started=started))
+        evidence = runtime_evidence(
+            request_id=request_id,
+            stage="inference.backend",
+            decision="FAIL",
+            started=started,
+            error=str(exc),
+        )
+        raise HTTPException(
+            status_code=502,
+            detail={"error": str(exc), "evidence": evidence},
+        ) from exc
+    return InferenceResponse(
+        request_id=request_id,
+        model=payload.model,
+        output=output,
+        backend=backend,
+        evidence=runtime_evidence(
+            request_id=request_id,
+            stage="inference.backend",
+            decision="ALLOW",
+            started=started,
+        ),
+    )
