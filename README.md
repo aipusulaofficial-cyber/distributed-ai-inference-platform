@@ -26,3 +26,6 @@ CI, production tests, security/SBOM checks and dependency auditing form the deli
 
 ## Evidence
 [deploy/kubernetes.yaml](deploy/kubernetes.yaml) · [ARCHITECTURE.md](ARCHITECTURE.md) · [docs/PRINCIPAL-ENGINEERING.md](docs/PRINCIPAL-ENGINEERING.md)
+
+## Portfolio evidence
+[Portfolio evidence map](docs/PORTFOLIO_EVIDENCE.md) — executable proof, architecture mapping and reviewable CI evidence.
