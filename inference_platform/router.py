@@ -35,8 +35,8 @@ class InferenceRouter:
         raise NoHealthyBackend("no healthy inference backend is available")
 
     async def infer(self, prompt: str, max_tokens: int) -> tuple[str, str]:
-        state = await self._next_healthy()
         async with self._semaphore:
+            state = await self._next_healthy()
             try:
                 return await asyncio.wait_for(
                     state.backend.infer(prompt, max_tokens), timeout=2.0
