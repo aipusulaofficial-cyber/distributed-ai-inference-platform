@@ -24,11 +24,7 @@ class InferenceRouter:
     ) -> None:
         if not backends:
             raise ValueError("at least one backend is required")
-        if (
-            isinstance(max_concurrency, bool)
-            or not isinstance(max_concurrency, int)
-            or max_concurrency < 1
-        ):
+        if isinstance(max_concurrency, bool) or not isinstance(max_concurrency, int) or max_concurrency < 1:
             raise ValueError("max_concurrency must be a positive integer")
         if (
             isinstance(timeout_seconds, bool)
@@ -55,11 +51,7 @@ class InferenceRouter:
     async def infer(self, prompt: str, max_tokens: int) -> tuple[str, str]:
         if not isinstance(prompt, str) or not prompt.strip():
             raise ValueError("prompt must be non-empty")
-        if (
-            isinstance(max_tokens, bool)
-            or not isinstance(max_tokens, int)
-            or max_tokens < 1
-        ):
+        if isinstance(max_tokens, bool) or not isinstance(max_tokens, int) or max_tokens < 1:
             raise ValueError("max_tokens must be a positive integer")
         async with self._semaphore:
             # Select an available backend only after obtaining an execution slot.
