@@ -11,9 +11,11 @@ def test_contract():
     assert c.get("/health/live").status_code == 200
 
 
-@given(st.text(min_size=1, max_size=32))
-def test_property(v):
-    assert (
-        c.post("/v1/inference", json={"model": "echo", "prompt": v, "max_tokens": 1}).status_code
-        == 200
+@given(st.text(max_size=32))
+def test_property(prompt):
+    response = c.post(
+        "/v1/inference",
+        json={"model": "echo", "prompt": prompt, "max_tokens": 1},
     )
+    expected_status = 200 if prompt.strip() else 422
+    assert response.status_code == expected_status
