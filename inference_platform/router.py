@@ -24,7 +24,11 @@ class InferenceRouter:
     ) -> None:
         if not backends:
             raise ValueError("at least one backend is required")
-        if isinstance(max_concurrency, bool) or not isinstance(max_concurrency, int) or max_concurrency < 1:
+        if (
+            isinstance(max_concurrency, bool)
+            or not isinstance(max_concurrency, int)
+            or max_concurrency < 1
+        ):
             raise ValueError("max_concurrency must be a positive integer")
         if (
             isinstance(timeout_seconds, bool)
