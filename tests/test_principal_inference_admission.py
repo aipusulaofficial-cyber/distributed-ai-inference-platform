@@ -8,7 +8,10 @@ from inference_platform.router import InferenceRouter
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("prompt,tokens", [("", 1), ("  ", 1), ("hello", 0), ("hello", -1), ("hello", True)])
+@pytest.mark.parametrize(
+    "prompt,tokens",
+    [("", 1), ("  ", 1), ("hello", 0), ("hello", -1), ("hello", True)],
+)
 async def test_invalid_requests_rejected_before_backend(prompt, tokens):
     router = InferenceRouter([EchoBackend(name="echo")])
     with pytest.raises(ValueError):
