@@ -1,29 +1,36 @@
 # Distributed AI Inference Platform
 
-**Principal-level reference implementation** focused on reliable model serving with routing, bounded concurrency, health-aware backends, and observable inference contracts.
+[![CI](https://github.com/aipusulaofficial-cyber/distributed-ai-inference-platform/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aipusulaofficial-cyber/distributed-ai-inference-platform/actions/workflows/ci.yml)
+[![Production Tests](https://github.com/aipusulaofficial-cyber/distributed-ai-inference-platform/actions/workflows/production-tests.yml/badge.svg?branch=main)](https://github.com/aipusulaofficial-cyber/distributed-ai-inference-platform/actions/workflows/production-tests.yml)
+[![Security / SBOM](https://github.com/aipusulaofficial-cyber/distributed-ai-inference-platform/actions/workflows/security-sbom.yml/badge.svg?branch=main)](https://github.com/aipusulaofficial-cyber/distributed-ai-inference-platform/actions/workflows/security-sbom.yml)
 
-## Engineering intent
-- Clear domain boundaries and replaceable infrastructure adapters
-- Explicit contracts, validation, and failure semantics
-- Deterministic tests with external dependencies isolated
-- Operational readiness through health checks, CI, and security validation
-- Architecture decisions documented so trade-offs are reviewable
 
-## System design
-The repository is structured around a small set of explicit responsibilities rather than framework-driven coupling. Request/event handling, domain policy, infrastructure adapters, and operational concerns are kept separable so individual components can evolve without forcing a system-wide rewrite.
+A model-serving platform for reliable inference with routing, bounded concurrency, health-aware backends and observable request contracts.
 
-## Quality bar
-- **Correctness:** contract and edge-case tests cover expected and failure paths
-- **Reliability:** bounded work, explicit timeouts/failures, and health signals where applicable
-- **Security:** least-privilege boundaries, input validation, and safe defaults
-- **Observability:** correlation/context propagation and actionable operational signals
-- **Delivery:** reproducible CI validation before changes are considered complete
+## Request path
+```text
+client -> inference API -> router -> healthy backend -> model execution -> response
+                         |             |
+                    concurrency    health state
+                         |
+                      metrics
+```
 
-## Principal engineering contract
-See [docs/PRINCIPAL-ENGINEERING.md](docs/PRINCIPAL-ENGINEERING.md) for the reviewable engineering contract, NFRs, and change-safety checklist.
+## Core behavior
+- Requests are routed only through explicit backend boundaries.
+- Concurrency is bounded to protect runtime resources.
+- Backend health participates in routing decisions.
+- Inference failures remain distinguishable from successful responses.
+- Operational context is correlated with requests.
 
-## Architecture & decisions
-See [ARCHITECTURE.md](ARCHITECTURE.md) and the ADRs directory for system boundaries, key trade-offs, and extension points.
+## Runtime hardening
+The Kubernetes deployment uses non-root execution, `RuntimeDefault` seccomp, disabled privilege escalation, a read-only root filesystem, dropped Linux capabilities, readiness/liveness probes and CPU/memory limits. Images use concrete versions rather than `latest`.
 
-## Engineering principle
-The goal is not to maximize framework complexity; it is to make important behavior **explicit, testable, observable, and replaceable**.
+## Verification
+CI, production tests, security/SBOM checks and dependency auditing form the delivery gates.
+
+## Evidence
+[deploy/kubernetes.yaml](deploy/kubernetes.yaml) · [ARCHITECTURE.md](ARCHITECTURE.md) · [docs/PRINCIPAL-ENGINEERING.md](docs/PRINCIPAL-ENGINEERING.md)
+
+## Portfolio evidence
+[Portfolio evidence map](docs/PORTFOLIO_EVIDENCE.md) — executable proof, architecture mapping and reviewable CI evidence.

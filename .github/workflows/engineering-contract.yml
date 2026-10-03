@@ -1,0 +1,24 @@
+name: Engineering Contract
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
+jobs:
+  contract:
+    uses: aipusulaofficial-cyber/aipusulaofficial-cyber/.github/workflows/reusable-engineering-contract.yml@618b1f0f05347d9358b3f90c78a766ea4476585f
+    with:
+      python-version: "3.12"
+      run-tests: true
+      run-build: true
+
+# Shared contract dependencies refreshed.
+
+# Runtime schema validation refresh.

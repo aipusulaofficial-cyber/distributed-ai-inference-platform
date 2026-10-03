@@ -1,23 +1,65 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: distributed-ai-inference-platform
+---
 apiVersion: apps/v1
 kind: Deployment
-metadata: {name: distributed-ai-inference-platform}
+metadata:
+  name: distributed-ai-inference-platform
+  namespace: distributed-ai-inference-platform
 spec:
- replicas: 2
- selector: {matchLabels: {app: distributed-ai-inference-platform}}
- template:
-  metadata: {labels: {app: distributed-ai-inference-platform}}
-  spec:
-   containers:
-    - name: api
-      image: distributed-ai-inference-platform:latest
-      ports: [{containerPort: 8000}]
-      readinessProbe: {httpGet: {path: /health/ready, port: 8000}}
-      livenessProbe: {httpGet: {path: /health/live, port: 8000}}
-      resources: {requests: {cpu: 100m, memory: 128Mi}, limits: {cpu: "1", memory: 512Mi}}
+  replicas: 2
+  selector:
+    matchLabels:
+      app: distributed-ai-inference-platform
+  template:
+    metadata:
+      labels:
+        app: distributed-ai-inference-platform
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: api
+          image: distributed-ai-inference-platform:0.1.0
+          ports:
+            - containerPort: 8000
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: RuntimeDefault
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8000
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8000
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
 ---
 apiVersion: v1
 kind: Service
-metadata: {name: distributed-ai-inference-platform}
+metadata:
+  name: distributed-ai-inference-platform
+  namespace: distributed-ai-inference-platform
 spec:
- selector: {app: distributed-ai-inference-platform}
- ports: [{port: 80, targetPort: 8000}]
+  selector:
+    app: distributed-ai-inference-platform
+  ports:
+    - port: 80
+      targetPort: 8000
