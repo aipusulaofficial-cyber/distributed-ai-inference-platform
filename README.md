@@ -1,5 +1,10 @@
 # Distributed AI Inference Platform
 
+[![CI](https://github.com/aipusulaofficial-cyber/distributed-ai-inference-platform/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/aipusulaofficial-cyber/distributed-ai-inference-platform/actions/workflows/ci.yml)
+[![Production Tests](https://github.com/aipusulaofficial-cyber/distributed-ai-inference-platform/actions/workflows/production-tests.yml/badge.svg?branch=main)](https://github.com/aipusulaofficial-cyber/distributed-ai-inference-platform/actions/workflows/production-tests.yml)
+[![Security / SBOM](https://github.com/aipusulaofficial-cyber/distributed-ai-inference-platform/actions/workflows/security-sbom.yml/badge.svg?branch=main)](https://github.com/aipusulaofficial-cyber/distributed-ai-inference-platform/actions/workflows/security-sbom.yml)
+
+
 A model-serving platform for reliable inference with routing, bounded concurrency, health-aware backends and observable request contracts.
 
 ## Request path
@@ -26,3 +31,6 @@ CI, production tests, security/SBOM checks and dependency auditing form the deli
 
 ## Evidence
 [deploy/kubernetes.yaml](deploy/kubernetes.yaml) · [ARCHITECTURE.md](ARCHITECTURE.md) · [docs/PRINCIPAL-ENGINEERING.md](docs/PRINCIPAL-ENGINEERING.md)
+
+## Portfolio evidence
+[Portfolio evidence map](docs/PORTFOLIO_EVIDENCE.md) — executable proof, architecture mapping and reviewable CI evidence.
