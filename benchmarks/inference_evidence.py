@@ -8,13 +8,18 @@ from __future__ import annotations
 
 import json
 import statistics
+import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from inference_platform.api import app
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+import importlib
+
+app = importlib.import_module("inference_platform.api").app
 
 
 def run(requests: int = 200, workers: int = 16) -> dict[str, object]:
@@ -74,8 +79,7 @@ def run(requests: int = 200, workers: int = 16) -> dict[str, object]:
         },
         "workload": "FastAPI TestClient -> /v1/inference -> router admission -> backend",
         "measurement": (
-            "repeatable CI HTTP inference acceptance benchmark; "
-            "not a production hardware claim"
+            "repeatable CI HTTP inference acceptance benchmark; not a production hardware claim"
         ),
     }
 
